@@ -270,7 +270,7 @@ export default function DashboardPage() {
                   </button>
                 </div>
                 <h3 className="text-white font-bold text-lg mb-1">{profileForm.name}</h3>
-                <p className="text-white/40 text-xs mb-6 lowercase">{profileForm.name.split(' ').join('.')}@rupx</p>
+                <p className="text-white/40 text-xs mb-6 lowercase">{profileForm.name.split(' ').join('.')}@wanderlust.in</p>
                 <div className="flex items-center justify-center gap-2">
                   <div className="px-3 py-1 rounded-lg bg-green-500/10 text-green-400 text-[10px] font-bold uppercase tracking-widest border border-green-500/20">Verified Email</div>
                   <div className="px-3 py-1 rounded-lg bg-coral-500/10 text-coral-400 text-[10px] font-bold uppercase tracking-widest border border-coral-400/20">Elite Tier</div>
