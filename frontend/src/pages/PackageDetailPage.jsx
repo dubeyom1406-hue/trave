@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Clock, Users, Star, Check, ArrowLeft, Calendar, Shield } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const PACKAGES = {
   '1': { _id: '1', title: 'Golden Triangle Tour', location: 'Delhi-Agra-Jaipur, India', duration: '7 Days', price: 25000, rating: 4.8, reviews: 234, image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=900&q=80', category: 'Cultural', maxGuests: 15, description: 'Explore the iconic Golden Triangle of India with expert-guided tours to the Taj Mahal, Agra Fort, Red Fort in Delhi, and the magnificent Amber Palace in Jaipur. This carefully curated journey takes you through centuries of history, vibrant markets, and authentic cuisine.', highlights: ['Taj Mahal sunrise visit', 'Agra Fort exploration', 'Jaipur Pink City tour', 'Rickshaw ride in Old Delhi', 'Rajasthani cultural evening', 'Cooking class with local chef'], included: ['Accommodation (4-star hotels)', 'Daily breakfast & dinner', 'Air-conditioned transport', 'Professional guide', 'Monument entrance fees', 'Airport transfers'], itinerary: [{ day: 1, title: 'Arrival in Delhi', desc: 'Arrive at Delhi airport, transfer to hotel. Evening welcome dinner.' }, { day: 2, title: 'Delhi Sightseeing', desc: 'Red Fort, Jama Masjid, Chandni Chowk rickshaw ride, Qutub Minar.' }, { day: 3, title: 'Delhi to Agra', desc: 'Drive to Agra. Agra Fort, Mehtab Bagh sunset view of Taj.' }, { day: 4, title: 'Taj Mahal', desc: 'Sunrise visit to Taj Mahal. Drive to Jaipur via Fatehpur Sikri.' }, { day: 5, title: 'Jaipur – Pink City', desc: 'Amber Fort, City Palace, Jantar Mantar, Hawa Mahal.' }, { day: 6, title: 'Jaipur Markets', desc: 'Shopping at local bazaars, textile factory visit, cultural dinner.' }, { day: 7, title: 'Departure', desc: 'Transfer to Delhi airport for departure.' }] }
@@ -8,7 +9,16 @@ const PACKAGES = {
 export default function PackageDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user, openAuth } = useAuth();
   const pkg = PACKAGES[id] || PACKAGES['1'];
+
+  const handleBook = () => {
+    if (!user) {
+      openAuth('login');
+      return;
+    }
+    navigate(`/booking/package/${pkg._id}`);
+  };
 
   return (
     <div className="min-h-screen bg-slate-900 pt-16">
@@ -104,9 +114,9 @@ export default function PackageDetailPage() {
                   <span className="text-white font-medium">{pkg.rating} ⭐</span>
                 </div>
               </div>
-              <button onClick={() => navigate(`/booking/package/${pkg._id}`)} className="btn-primary w-full py-3.5 text-center flex items-center justify-center gap-2">
-                <Calendar size={16} /> Book Now
-              </button>
+               <button onClick={handleBook} className="btn-primary w-full py-3.5 text-center flex items-center justify-center gap-2">
+                 <Calendar size={16} /> Book Now
+               </button>
               <div className="mt-4 flex items-center justify-center gap-2 text-white/40 text-xs">
                 <Shield size={12} /> Free cancellation within 48 hours
               </div>

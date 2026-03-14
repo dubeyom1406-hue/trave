@@ -7,6 +7,50 @@
     <title>Rupiksha Travel | Premium React App</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              coral: {
+                400: '#FF6B6B',
+                500: '#FF5252',
+              },
+              ocean: {
+                400: '#00D2FF',
+              },
+            },
+            fontFamily: {
+              display: ['Outfit', 'sans-serif'],
+              sans: ['Inter', 'sans-serif'],
+            },
+          }
+        }
+      }
+    </script>
+    <style type="text/tailwindcss">
+      @layer utilities {
+        .glass {
+          @apply bg-white/10 backdrop-blur-md border border-white/20;
+        }
+        .glass-dark {
+          @apply bg-slate-950/50 backdrop-blur-xl border border-white/10;
+        }
+        .coral-gradient {
+          @apply bg-gradient-to-r from-coral-400 to-coral-500;
+        }
+        .gradient-text {
+          @apply bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60;
+        }
+        .card-hover {
+          @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-coral-500/20;
+        }
+        .btn-primary {
+          @apply coral-gradient text-white font-bold py-3 px-8 rounded-2xl shadow-lg shadow-coral-500/30 transition-all hover:scale-[1.02] active:scale-[0.98];
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

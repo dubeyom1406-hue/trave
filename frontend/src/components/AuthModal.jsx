@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { auth } from '../firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { useAuth } from '../context/AuthContext';
 
 const AuthModal = ({ type, isOpen, onClose }) => {
+  const { loginWithGoogle } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -34,7 +36,9 @@ const AuthModal = ({ type, isOpen, onClose }) => {
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>&times;</button>
         <div className="modal-header">
-          <div className="modal-logo"><i className="fas fa-paper-plane"></i></div>
+          <div className="modal-logo">
+            <img src="/logo.png" alt="Rupiksha" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+          </div>
           <h2>{type === 'login' ? 'Welcome Back' : 'Create Account'}</h2>
           <p>{type === 'login' ? 'Login to access your bookings' : 'Join Rupiksha Travel'}</p>
         </div>
@@ -61,6 +65,30 @@ const AuthModal = ({ type, isOpen, onClose }) => {
             {loading ? <i className="fas fa-spinner fa-spin"></i> : (type === 'login' ? 'Sign In' : 'Sign Up')}
           </button>
         </form>
+
+        <div style={{ margin: '20px 0', textAlign: 'center', position: 'relative' }}>
+          <hr style={{ border: '0.1px solid var(--glass-border)' }} />
+          <span style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'var(--dark-2)', padding: '0 10px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>OR</span>
+        </div>
+
+        <button 
+          className="btn btn-outline btn-full" 
+          disabled={loading}
+          onClick={async () => {
+            setLoading(true);
+            setError('');
+            try {
+              await loginWithGoogle();
+              onClose();
+            } catch (err) {
+              setError(err.message);
+            }
+            setLoading(false);
+          }}
+        >
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{width:'18px', marginRight:'10px'}} />
+          Continue with Google
+        </button>
       </div>
     </div>
   );

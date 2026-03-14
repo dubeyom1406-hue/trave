@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Star, Wifi, Coffee, Car, Waves, ArrowLeft, Calendar, Shield, Check } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const HOTELS = {
   'h1': { _id: 'h1', name: 'Taj Lake Palace', location: 'Udaipur, Rajasthan', price: 45000, rating: 4.9, reviews: 1245, image: 'https://images.unsplash.com/photo-1585128792020-803d29415281?w=900&q=80', amenities: ['wifi', 'pool', 'parking', 'breakfast'], category: 'Luxury', description: 'Experience royal living in the middle of Lake Pichola. A 5-star heritage hotel offering unrivaled luxury with marble interiors and panoramic views.', rooms: [{ type: 'Deluxe Room', price: 45000, features: ['Lake view', 'King bed', '40m²'] }, { type: 'Junior Suite', price: 65000, features: ['Palace view', 'Living area', '65m²'] }, { type: 'Grand Royal Suite', price: 125000, features: 'Lake view, Private butler, 150m²'.split(', ') }] },
@@ -8,7 +9,16 @@ const HOTELS = {
 export default function HotelDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user, openAuth } = useAuth();
   const hotel = HOTELS[id] || HOTELS['h1'];
+
+  const handleBook = () => {
+    if (!user) {
+      openAuth('login');
+      return;
+    }
+    navigate(`/booking/hotel/${hotel._id}`);
+  };
 
   return (
     <div className="min-h-screen bg-slate-900 pt-16">
@@ -85,7 +95,7 @@ export default function HotelDetailPage() {
                 <div className="text-white/40 text-sm">Starting from</div>
                 <div className="font-display text-4xl font-bold text-coral-400 mt-1">₹{hotel.price}<span className="text-lg text-white/40">/night</span></div>
               </div>
-              <button onClick={() => navigate(`/booking/hotel/${hotel._id}`)} className="btn-primary w-full py-3.5 text-center flex items-center justify-center gap-2">
+              <button onClick={handleBook} className="btn-primary w-full py-3.5 text-center flex items-center justify-center gap-2">
                 <Calendar size={16} /> Book This Hotel
               </button>
               <div className="mt-4 flex items-center justify-center gap-2 text-white/40 text-xs">

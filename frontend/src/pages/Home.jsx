@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import Logo from '../components/Logo';
 
 const destinations = [
   {
@@ -130,7 +133,6 @@ const hotels = [
 
 const services = [
   { icon: 'fa-hotel', title: 'Luxury Hotels', desc: 'Handpicked premium stays across India — from royal palaces to hill retreats.', cls: 'hotel', color: '#6C63FF' },
-  { icon: 'fa-plane', title: 'Domestic Flights', desc: 'Cheapest airfares to 100+ Indian cities. Book in seconds.', cls: 'flight', color: '#00D2FF' },
   { icon: 'fa-train', title: 'Train Tickets', desc: 'Hassle-free Indian Railways booking with instant confirmation.', cls: 'train', color: '#FF6B6B' },
   { icon: 'fa-car', title: 'Cabs & Rentals', desc: 'Self-drive or chauffeur-driven cars across all major cities.', cls: 'cab', color: '#FFE66D' },
 ];
@@ -160,7 +162,17 @@ const testimonials = [
 ];
 
 const Home = () => {
+  const navigate = useNavigate();
+  const { user, openAuth } = useAuth();
   const [activeTab, setActiveTab] = useState('Hotels');
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+
+  const heroTexts = [
+    { title: 'Incredible', subtitle: 'Discover breathtaking destinations, luxurious stays, and unforgettable experiences across India.' },
+    { title: 'Unforgettable', subtitle: 'Book premium hotels, domestic flights, and luxury train journeys at the best prices.' },
+    { title: 'Magnificent', subtitle: 'Experience the rich culture, heritage, and hidden gems of Incredible India with Rupiksha.' },
+    { title: 'Beautiful', subtitle: 'From snow-capped mountains to golden beaches, explore the diversity of India today.' }
+  ];
   const [searchFrom, setSearchFrom] = useState('');
   const [searchTo, setSearchTo] = useState('');
   const [checkIn, setCheckIn] = useState('');
@@ -177,11 +189,29 @@ const Home = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setBgIndex(prev => (prev + 1) % heroBgs.length);
-    }, 5000);
+      setCurrentTextIndex(prev => (prev + 1) % heroTexts.length);
+    }, 4000);
     return () => clearInterval(timer);
   }, []);
 
   const tabs = ['Hotels', 'Flights', 'Trains', 'Cabs'];
+
+  const handleSearch = () => {
+    const route = activeTab.toLowerCase();
+    navigate(`/${route}?from=${searchFrom}&to=${searchTo}`);
+  };
+
+  const handleBookNow = (item = null) => {
+    if (!user) {
+      openAuth('login');
+      return;
+    }
+    if (item && item.id) {
+        navigate(`/hotels/${item.id}`);
+    } else {
+        navigate('/packages');
+    }
+  };
 
   return (
     <div style={{ background: 'var(--dark)', minHeight: '100vh' }}>
@@ -219,14 +249,13 @@ const Home = () => {
             🇮🇳 India's Most Trusted Travel Platform
           </div>
 
-          <h1 className="hero-title">
-            Explore <span className="gradient-text">Incredible</span>
+          <h1 className="hero-title" key={currentTextIndex} style={{ animation: 'fadeInUp 0.8s ease-out' }}>
+            Explore <span className="gradient-text">{heroTexts[currentTextIndex].title}</span>
             <br />India with Rupiksha
           </h1>
 
-          <p className="hero-subtitle">
-            Discover breathtaking destinations, luxurious stays, and unforgettable experiences
-            across India — all at the best prices in Indian Rupees ₹
+          <p className="hero-subtitle" style={{ animation: 'fadeInUp 1s ease-out' }}>
+            {heroTexts[currentTextIndex].subtitle} — all at the best prices in Indian Rupees ₹
           </p>
 
           {/* Search Box */}
@@ -272,7 +301,7 @@ const Home = () => {
                 </div>
               )}
               <div className="input-col">
-                <label>📅 Check-in</label>
+                <label>📅 {activeTab === 'Hotels' ? 'Check-in' : 'Travel Date'}</label>
                 <input
                   type="date"
                   className="input-field"
@@ -281,17 +310,7 @@ const Home = () => {
                   style={{ colorScheme: 'dark' }}
                 />
               </div>
-              <div className="input-col">
-                <label>📅 Check-out</label>
-                <input
-                  type="date"
-                  className="input-field"
-                  value={checkOut}
-                  onChange={e => setCheckOut(e.target.value)}
-                  style={{ colorScheme: 'dark' }}
-                />
-              </div>
-              <button className="search-btn" title="Search">
+              <button className="search-btn" title="Search" onClick={handleSearch}>
                 <i className="fas fa-search" />
               </button>
             </div>
@@ -321,7 +340,7 @@ const Home = () => {
           <h2 className="section-title">Everything You Need for <span style={{ color: 'var(--primary)' }}>India Travel</span></h2>
           <p className="section-subtitle">One platform for all your travel needs — hotels, flights, trains & cabs across India.</p>
         </div>
-        <div className="services-grid">
+        <div className="services-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
           {services.map((s, i) => (
             <div className="service-card" key={i} style={{ cursor: 'pointer' }}>
               <div className={`service-icon ${s.cls}`}>
@@ -456,7 +475,7 @@ const Home = () => {
                     <span style={{ fontSize: '1.3rem', fontWeight: '800', color: 'var(--primary-light)' }}>{hotel.price}</span>
                     <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{hotel.per}</span>
                   </div>
-                  <button className="btn btn-primary" style={{ padding: '8px 18px', fontSize: '0.8rem' }}>
+                   <button onClick={() => handleBookNow(hotel)} className="btn btn-primary" style={{ padding: '8px 18px', fontSize: '0.8rem' }}>
                     Book Now
                   </button>
                 </div>
@@ -534,7 +553,7 @@ const Home = () => {
         <h2>🎉 Get Flat ₹500 Off on Your First Booking!</h2>
         <p>Use code <strong style={{ color: 'var(--primary-light)' }}>RUPIKSHA500</strong> at checkout. Limited time offer for new users.</p>
         <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button className="btn btn-primary" style={{ padding: '14px 32px', fontSize: '1rem' }}>
+           <button onClick={() => handleBookNow()} className="btn btn-primary" style={{ padding: '14px 32px', fontSize: '1rem' }}>
             <i className="fas fa-paper-plane" /> Book Now & Save ₹500
           </button>
           <button className="btn btn-outline" style={{ padding: '14px 32px', fontSize: '1rem' }}>
@@ -551,8 +570,8 @@ const Home = () => {
         color: 'var(--text-muted)',
         fontSize: '0.9rem'
       }}>
-        <div style={{ marginBottom: '16px', fontSize: '1.4rem', fontWeight: '800', color: 'var(--text)' }}>
-          ✈️ Rupiksha <span style={{ color: 'var(--primary)' }}>Travel</span>
+        <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
+          <Logo height="35px" />
         </div>
         <p style={{ marginBottom: '8px' }}>
           <i className="fas fa-map-marker-alt" style={{ color: 'var(--primary)', marginRight: '6px' }} />

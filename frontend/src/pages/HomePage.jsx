@@ -99,7 +99,6 @@ export default function HomePage() {
               {[
                 { id: 'packages', icon: Compass, label: 'Packages' },
                 { id: 'hotels', icon: Hotel, label: 'Hotels' },
-                { id: 'flights', icon: Plane, label: 'Flights' },
               ].map(({ id, icon: Icon, label }) => (
                 <button
                   key={id}
@@ -276,12 +275,12 @@ export default function HomePage() {
           <div className="text-center mb-12">
             <p className="text-coral-400 text-sm font-medium tracking-widest uppercase mb-3">Travel Anywhere, Anytime</p>
             <h2 className="section-title">Book Your <span className="gradient-text italic">Transportation</span></h2>
-            <p className="text-white/50 mt-4 max-w-xl mx-auto">Seamless booking for flights, buses, trains, and cabs all in one place</p>
+            <p className="text-white/50 mt-4 max-w-xl mx-auto">Seamless booking for buses, trains, and cabs all in one place</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
             {[
-              { icon: '✈️', title: 'Flights', desc: 'Book domestic and international flights', path: '/flights', color: 'from-blue-600 to-blue-400' },
               { icon: '🚌', title: 'Buses', desc: 'Comfortable and affordable bus travel', path: '/buses', color: 'from-orange-600 to-orange-400' },
               { icon: '🚂', title: 'Trains', desc: 'Book train tickets across India', path: '/trains', color: 'from-green-600 to-green-400' },
               { icon: '🚕', title: 'Cabs', desc: 'Convenient ride-sharing services', path: '/cabs', color: 'from-rose-600 to-rose-400' },

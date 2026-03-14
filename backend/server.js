@@ -10,7 +10,11 @@ const app = express();
 // In-memory data storage
 let users = [];
 let bookings = [];
-let idCounter = { user: 1, booking: 1 };
+let packages = [
+  { id: 1, title: 'Golden Triangle Tour', location: 'Delhi-Agra-Jaipur, India', duration: '7 Days', price: 25000, rating: 4.8, reviews: 234, image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=500&q=80', category: 'Cultural', description: 'Explore the iconic Golden Triangle of India.' },
+  { id: 2, title: 'Goa Beach Holiday', location: 'Goa, India', duration: '5 Days', price: 15000, rating: 4.9, reviews: 412, image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=500&q=80', category: 'Beach', description: 'Relax on the sun-kissed beaches of Goa.' }
+];
+let idCounter = { user: 1, booking: 1, package: 3 };
 
 // Demo users
 const demoUser = {
@@ -174,17 +178,12 @@ app.post('/api/bookings', (req, res) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret123');
-    const { destination, checkIn, checkOut, guests, type, totalAmount } = req.body;
-
+    const bookingData = req.body;
+    
     const newBooking = {
       id: idCounter.booking++,
+      ...bookingData,
       userId: decoded.id,
-      destination,
-      checkIn,
-      checkOut,
-      guests,
-      type,
-      totalAmount,
       status: 'confirmed',
       createdAt: new Date()
     };
@@ -245,6 +244,41 @@ app.put('/api/bookings/:id/cancel', (req, res) => {
 // ===========================
 // ADMIN ROUTES
 // ===========================
+// PACKAGE ROUTES
+// ===========================
+
+// Get all packages
+app.get('/api/packages', (req, res) => {
+  res.json(packages);
+});
+
+// Create package (admin)
+app.post('/api/packages', (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'No token provided' });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret123');
+    const admin = users.find(u => u.id === decoded.id && u.role === 'admin');
+    if (!admin) return res.status(403).json({ message: 'Admin access required' });
+
+    const newPackage = { id: idCounter.package++, ...req.body, rating: 5.0, reviews: 0 };
+    packages.push(newPackage);
+    res.status(201).json(newPackage);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to create package' });
+  }
+});
+
+// Delete package
+app.delete('/api/packages/:id', (req, res) => {
+  const index = packages.findIndex(p => p.id == req.params.id);
+  if (index !== -1) {
+    packages.splice(index, 1);
+    res.json({ message: 'Package deleted' });
+  } else {
+    res.status(404).json({ message: 'Package not found' });
+  }
+});
 
 // Get all users
 app.get('/api/admin/users', (req, res) => {
@@ -289,7 +323,10 @@ app.get('/api/admin/bookings', (req, res) => {
 
     const bookingsWithUser = bookings.map(b => {
       const user = users.find(u => u.id === b.userId);
-      return { ...b, user: { name: user.name, email: user.email, phone: user.phone } };
+      return { 
+        ...b, 
+        user: user ? { name: user.name, email: user.email, phone: user.phone } : { name: b.name || 'Guest', email: b.email, phone: b.phone } 
+      };
     });
 
     res.json(bookingsWithUser);

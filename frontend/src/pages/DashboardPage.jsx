@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { cancelBooking } from '../services/api'; // Mock or actual API
+import { db } from '../firebase';
+import { doc, updateDoc } from 'firebase/firestore';
 import { MapPin, Calendar, Users, Clock, X, User, Mail, Phone, Edit2, Check, Luggage, Wallet, Star, ChevronRight, LayoutDashboard, Settings, LogOut, Bell, Shield } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -22,10 +23,31 @@ export default function DashboardPage() {
   const [bookings, setBookings] = useState(DEMO_BOOKINGS);
   const [editProfile, setEditProfile] = useState(false);
   const [profileForm, setProfileForm] = useState({ 
-    name: user?.displayName || 'User Explorer', 
-    phone: '+91 98765 43210', 
-    bio: 'Passionate world traveler and adventure seeker.' 
+    name: user?.name || 'User Explorer', 
+    phone: user?.phone || '+91 98765 43210', 
+    bio: user?.bio || 'Passionate world traveler and adventure seeker.' 
   });
+
+  useEffect(() => {
+    if (user) {
+      setProfileForm({
+        name: user.name || '',
+        phone: user.phone || '',
+        bio: user.bio || ''
+      });
+    }
+  }, [user]);
+
+  const handleSaveProfile = async () => {
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, profileForm);
+      toast.success('Profile updated successfully!');
+      setEditProfile(false);
+    } catch (error) {
+      toast.error('Failed to update profile');
+    }
+  };
 
   const handleCancel = (id) => {
     toast.error('Cancellation request sent to admin');
@@ -121,7 +143,7 @@ export default function DashboardPage() {
             <div>
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                  < Luggage className="text-coral-500" size={20}/> Active Bookings
+                  <Luggage className="text-coral-500" size={20}/> Active Bookings
                 </h2>
                 <button 
                   onClick={() => setActiveTab('bookings')}
@@ -213,7 +235,7 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between mb-8">
                   <h2 className="text-xl font-bold text-white">Personal Information</h2>
                   <button 
-                    onClick={() => setEditProfile(!editProfile)}
+                    onClick={() => editProfile ? handleSaveProfile() : setEditProfile(true)}
                     className="text-coral-400 text-xs font-bold flex items-center gap-2 hover:bg-coral-400/10 px-4 py-2 rounded-xl transition-all"
                   >
                     {editProfile ? <><Check size={14} /> Save Profile</> : <><Edit2 size={14} /> Edit Info</>}
