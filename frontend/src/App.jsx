@@ -17,6 +17,7 @@ import FlightsPage from './pages/FlightsPage';
 import DestinationsPage from './pages/DestinationsPage';
 import { useAuth } from './context/AuthContext';
 import { Toaster } from 'react-hot-toast';
+import { Navigate } from 'react-router-dom';
 import './index.css';
 import './App.css';
 
@@ -56,6 +57,7 @@ const AppContent = () => {
         <Route path="/cabs" element={<CabsPage />} />
         <Route path="/flights" element={<FlightsPage />} />
         <Route path="/destinations" element={<DestinationsPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
       <AuthModal

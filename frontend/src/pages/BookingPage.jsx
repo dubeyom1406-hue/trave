@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { db } from '../firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { createBooking, createRazorpayOrder, verifyRazorpayPayment } from '../services/api';
 import { Calendar, Users, MapPin, CreditCard, Shield, Check, Loader } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -29,6 +30,17 @@ export default function BookingPage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  // Sync form with user data when user logs in
+  useEffect(() => {
+    if (user) {
+      setForm(prev => ({
+        ...prev,
+        name: user.name || user.displayName || '',
+        email: user.email || '',
+      }));
+    }
+  }, [user]);
 
   const totalPrice = item.price * form.guests;
   const taxes = Math.round(totalPrice * 0.12);
@@ -65,6 +77,19 @@ export default function BookingPage() {
             handler: async (response) => {
               await verifyRazorpayPayment({ ...response, bookingData });
               await createBooking({ ...bookingData, paymentId: response.razorpay_payment_id, status: 'confirmed' });
+              // SAVE TO FIRESTORE ALSO
+              try {
+                await addDoc(collection(db, 'bookings'), {
+                  ...bookingData,
+                  paymentId: response.razorpay_payment_id,
+                  status: 'confirmed',
+                  createdAt: serverTimestamp(),
+                  source: 'web'
+                });
+              } catch (fsError) {
+                console.error("Firestore booking save failed:", fsError);
+                // Don't fail the whole process if only Firestore save fails
+              }
               setSuccess(true);
               toast.success('Booking confirmed! 🎉');
             },
@@ -76,15 +101,42 @@ export default function BookingPage() {
         } catch (_) {
           // Demo mode: simulate success
           await createBooking({ ...bookingData, status: 'confirmed' });
+          // SAVE TO FIRESTORE ALSO
+          try {
+            await addDoc(collection(db, 'bookings'), {
+              ...bookingData,
+              status: 'confirmed',
+              createdAt: serverTimestamp(),
+              source: 'web'
+            });
+          } catch (fsError) {
+            console.error("Firestore booking save failed:", fsError);
+            // Don't fail the whole process if only Firestore save fails
+          }
           setSuccess(true);
         }
       } else {
         // Stripe or demo
         await createBooking({ ...bookingData, status: 'confirmed' });
+        
+        // SAVE TO FIRESTORE ALSO
+        try {
+          await addDoc(collection(db, 'bookings'), {
+            ...bookingData,
+            status: 'confirmed',
+            createdAt: serverTimestamp(),
+            source: 'web'
+          });
+        } catch (fsError) {
+          console.error("Firestore booking save failed:", fsError);
+          // Don't fail the whole process if only Firestore save fails
+        }
+
         setSuccess(true);
         toast.success('Booking confirmed! 🎉');
       }
     } catch (err) {
+      console.error("Booking submission error:", err);
       // Simulate success for demo
       setSuccess(true);
       toast.success('Booking confirmed! (Demo mode) 🎉');

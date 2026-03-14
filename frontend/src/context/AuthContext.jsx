@@ -21,10 +21,12 @@ export const AuthProvider = ({ children }) => {
   // Function to sync user with Firestore
   const syncUserWithFirestore = async (firebaseUser) => {
     if (!firebaseUser) return null;
+    console.log("🔍 Syncing user with Firestore:", firebaseUser.email);
     
     try {
       const userRef = doc(db, 'users', firebaseUser.uid);
       const userSnap = await getDoc(userRef);
+      console.log("📄 Firestore User Snap exists:", userSnap.exists());
       
       let userData;
       if (userSnap.exists()) {
@@ -41,17 +43,23 @@ export const AuthProvider = ({ children }) => {
           phone: '',
           bio: 'Traveling the world!'
         };
+        console.log("🆕 Creating new user in Firestore...");
         await setDoc(userRef, userData);
+        console.log("✅ User created in Firestore");
       }
       
       // Sync with Node.js backend
       try {
-        await syncFirebaseUser({
+        const response = await syncFirebaseUser({
           uid: firebaseUser.uid,
           email: firebaseUser.email,
           name: userData.name,
           photoURL: firebaseUser.photoURL
         });
+        
+        if (response.data && response.data.token) {
+          localStorage.setItem('token', response.data.token);
+        }
       } catch (backendError) {
         console.error("Backend sync failed:", backendError);
       }
