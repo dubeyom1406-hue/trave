@@ -39,7 +39,7 @@ export default function BookingPage() {
     if (step === 1) { setStep(2); return; }
     setLoading(true);
     try {
-      // Create booking in MongoDB
+      // Create booking
       const bookingData = {
         ...form,
         type,
@@ -59,7 +59,7 @@ export default function BookingPage() {
             key: import.meta.env.VITE_RAZORPAY_KEY_ID,
             amount: data.amount,
             currency: 'INR',
-            name: 'WanderLust',
+            name: 'Rupiksha Travel',
             description: item.title,
             order_id: data.id,
             handler: async (response) => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import Logo from '../components/Logo';
+import logo from '../assets/logo.png';
 
 const destinations = [
   {
@@ -571,7 +571,7 @@ const Home = () => {
         fontSize: '0.9rem'
       }}>
         <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
-          <Logo height="35px" />
+          <img src={logo} alt="Rupiksha Travel Logo" style={{ height: '35px' }} />
         </div>
         <p style={{ marginBottom: '8px' }}>
           <i className="fas fa-map-marker-alt" style={{ color: 'var(--primary)', marginRight: '6px' }} />

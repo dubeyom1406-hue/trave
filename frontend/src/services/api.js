@@ -28,6 +28,7 @@ export const updateBookingStatus = (id, status) => api.put(`/admin/bookings/${id
 // Auth
 export const loginUser = (credentials) => api.post('/auth/login', credentials);
 export const registerUser = (userData) => api.post('/auth/register', userData);
+export const syncFirebaseUser = (userData) => api.post('/auth/firebase-sync', userData);
 export const getProfile = () => api.get('/user/profile');
 export const updateProfile = (data) => api.put('/user/profile', data);
 

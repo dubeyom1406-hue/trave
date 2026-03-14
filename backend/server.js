@@ -116,6 +116,44 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
+// Firebase Sync (Handles Google Login and other Firebase Auth methods)
+app.post('/api/auth/firebase-sync', (req, res) => {
+  try {
+    const { uid, email, name, photoURL } = req.body;
+    
+    let user = users.find(u => u.email === email);
+    
+    if (user) {
+      // Update existing user
+      user.name = name || user.name;
+      user.photoURL = photoURL || user.photoURL;
+      user.uid = uid; // Ensure UID is linked
+    } else {
+      // Create new user for backend
+      user = {
+        id: idCounter.user++,
+        uid,
+        name: name || email.split('@')[0],
+        email,
+        role: email === 'admin@rupiksha.com' ? 'admin' : 'user',
+        photoURL,
+        createdAt: new Date()
+      };
+      users.push(user);
+    }
+
+    const token = jwt.sign({ id: user.id, email }, process.env.JWT_SECRET || 'secret123', { expiresIn: '7d' });
+
+    res.json({
+      message: 'Sync successful',
+      token,
+      user: { id: user.id, name: user.name, email: user.email, role: user.role }
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Sync failed', error: error.message });
+  }
+});
+
 // Get profile
 app.get('/api/user/profile', (req, res) => {
   try {
@@ -436,7 +474,7 @@ app.delete('/api/admin/users/:id', (req, res) => {
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'Server running',
-    database: 'In-Memory (No MongoDB/XAMPP needed)',
+    database: 'In-Memory Storage',
     users: users.length,
     bookings: bookings.length,
     timestamp: new Date()
@@ -451,6 +489,6 @@ app.get('*', (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Rupiksha Travel Server running on http://localhost:${PORT}`);
-  console.log('✅ Database: In-Memory Mode (No MongoDB/XAMPP needed!)');
+  console.log('✅ Database: In-Memory Mode Active');
   console.log(`📊 Users: ${users.length}, Bookings: ${bookings.length}`);
 });

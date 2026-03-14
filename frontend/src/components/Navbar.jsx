@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { LogOut, User, LayoutDashboard, Menu, X, ChevronDown } from 'lucide-react';
-import Logo from './Logo';
+import logo from '../assets/logo.png';
 
 const Navbar = ({ onOpenAuth }) => {
   const { user, logout } = useAuth();
@@ -22,8 +22,9 @@ const Navbar = ({ onOpenAuth }) => {
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="nav-container">
-        <Link to="/" className="nav-logo">
-          <Logo />
+        <Link to="/" className="nav-logo flex items-center gap-3">
+          <img src={logo} alt="Rupiksha" className="h-10 w-auto brightness-110" />
+          <span className="font-display font-bold text-2xl tracking-tight">Rupiksha<span className="text-coral-500">Travel</span></span>
         </Link>
 
         {/* Desktop Links */}

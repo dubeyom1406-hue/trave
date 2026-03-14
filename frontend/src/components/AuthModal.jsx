@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { auth } from '../firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useAuth } from '../context/AuthContext';
+import logo from '../assets/logo.png';
 
 const AuthModal = ({ type, isOpen, onClose }) => {
   const { loginWithGoogle } = useAuth();
@@ -37,7 +38,7 @@ const AuthModal = ({ type, isOpen, onClose }) => {
         <button className="modal-close" onClick={onClose}>&times;</button>
         <div className="modal-header">
           <div className="modal-logo">
-            <img src="/logo.png" alt="Rupiksha" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            <img src={logo} alt="Rupiksha" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
           <h2>{type === 'login' ? 'Welcome Back' : 'Create Account'}</h2>
           <p>{type === 'login' ? 'Login to access your bookings' : 'Join Rupiksha Travel'}</p>

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { auth, db } from '../firebase';
 import { onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { syncFirebaseUser } from '../services/api';
 
 export const AuthContext = createContext();
 
@@ -35,13 +36,26 @@ export const AuthProvider = ({ children }) => {
           email: firebaseUser.email,
           name: firebaseUser.displayName || firebaseUser.email.split('@')[0],
           photoURL: firebaseUser.photoURL,
-          role: firebaseUser.email === 'admin@wanderlust.com' ? 'admin' : 'user', // Hardcoded admin for now
+          role: firebaseUser.email === 'admin@rupiksha.com' ? 'admin' : 'user', // Hardcoded admin for now
           createdAt: new Date().toISOString(),
           phone: '',
           bio: 'Traveling the world!'
         };
         await setDoc(userRef, userData);
       }
+      
+      // Sync with Node.js backend
+      try {
+        await syncFirebaseUser({
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          name: userData.name,
+          photoURL: firebaseUser.photoURL
+        });
+      } catch (backendError) {
+        console.error("Backend sync failed:", backendError);
+      }
+
       return userData;
     } catch (error) {
       console.error("Error syncing user with Firestore:", error);
