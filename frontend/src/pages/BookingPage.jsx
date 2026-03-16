@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { createBooking, createRazorpayOrder, verifyRazorpayPayment } from '../services/api';
 import { Calendar, Users, MapPin, CreditCard, Shield, Check, Loader } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 
 const ITEMS = {
