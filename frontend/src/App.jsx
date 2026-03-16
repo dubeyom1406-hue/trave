@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import AuthModal from './components/AuthModal';
@@ -17,9 +17,9 @@ import FlightsPage from './pages/FlightsPage';
 import DestinationsPage from './pages/DestinationsPage';
 import { useAuth } from './context/AuthContext';
 import { Toaster } from 'react-hot-toast';
-import { Navigate } from 'react-router-dom';
 import './index.css';
 import './App.css';
+import Footer from './components/Footer';
 
 const ProtectedAdminRoute = ({ children }) => {
   const { user } = useAuth();
@@ -65,6 +65,7 @@ const AppContent = () => {
         type={authModal.type}
         onClose={closeAuth}
       />
+      <Footer />
     </div>
   );
 };

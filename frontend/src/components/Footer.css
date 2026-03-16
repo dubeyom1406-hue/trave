@@ -1,0 +1,134 @@
+.footer {
+  background-color: #111111;
+  color: #ffffff;
+  padding: 80px 0 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+
+.footer-brand h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.footer-brand p {
+  color: #a0a0a0;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  font-size: 1rem;
+}
+
+.social-links {
+  display: flex;
+  gap: 16px;
+}
+
+.social-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+  background: var(--primary, #6C63FF);
+  transform: translateY(-3px);
+}
+
+.footer-column h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #fff;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  color: #a0a0a0;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 1rem;
+}
+
+.footer-links a:hover {
+  color: #fff;
+  padding-left: 5px;
+}
+
+.footer-contact li {
+  display: flex;
+  gap: 12px;
+  color: #a0a0a0;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.contact-icon {
+  color: #666;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.footer-bottom {
+  margin-top: 80px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.footer-bottom-links {
+  display: flex;
+  gap: 60px;
+}
+
+.footer-bottom-links a:hover {
+  color: #fff;
+}
+
+@media (max-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+}

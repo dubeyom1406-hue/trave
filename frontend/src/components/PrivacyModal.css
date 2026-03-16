@@ -1,0 +1,143 @@
+.privacy-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+.privacy-modal-content {
+  background: #1a1932;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 700px;
+  max-height: 85vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.privacy-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  color: #a0a0a0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.privacy-modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.privacy-modal-header {
+  padding: 40px 40px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.privacy-modal-header h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.privacy-modal-header p {
+  color: #6c63ff;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.privacy-modal-body {
+  padding: 30px 40px;
+  overflow-y: auto;
+  color: #a0a0a0;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.privacy-modal-body h3 {
+  color: #fff;
+  font-size: 1.2rem;
+  margin: 24px 0 12px;
+  font-weight: 700;
+}
+
+.privacy-modal-body h3:first-child {
+  margin-top: 0;
+}
+
+.privacy-modal-body p {
+  margin-bottom: 16px;
+}
+
+.privacy-modal-footer {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  color: #71717a;
+  font-size: 0.9rem;
+}
+
+.privacy-modal-footer p {
+  margin-bottom: 8px;
+}
+
+.last-updated {
+  margin-top: 20px;
+  font-style: italic;
+  color: #4b5563;
+}
+
+/* Custom Scrollbar for Modal Body */
+.privacy-modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.privacy-modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.privacy-modal-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 640px) {
+  .privacy-modal-header, .privacy-modal-body {
+    padding: 24px;
+  }
+}

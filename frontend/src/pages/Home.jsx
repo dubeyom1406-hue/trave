@@ -251,7 +251,7 @@ const Home = () => {
 
           <h1 className="hero-title" key={currentTextIndex} style={{ animation: 'fadeInUp 0.8s ease-out' }}>
             Explore <span className="gradient-text">{heroTexts[currentTextIndex].title}</span>
-            <br />India with Rupiksha
+            <br />India with Rupiksha Travel
           </h1>
 
           <p className="hero-subtitle" style={{ animation: 'fadeInUp 1s ease-out' }}>
@@ -577,7 +577,7 @@ const Home = () => {
           <i className="fas fa-map-marker-alt" style={{ color: 'var(--primary)', marginRight: '6px' }} />
           India's Most Trusted Travel Booking Platform 🇮🇳
         </p>
-        <p>© 2026 Rupiksha Travel. All rights reserved. | Made with ❤️ for Indians</p>
+        <p>© 2025 Rupiksha Travel. All rights reserved. | Made with ❤️ for Indians</p>
       </footer>
     </div>
   );
